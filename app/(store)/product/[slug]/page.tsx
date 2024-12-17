@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { imageUrl } from "@/lib/imageUrl";
 import { PortableText } from "next-sanity";
+import AddToBasketButton from "@/components/AddToBasketButton";
 
 async function productPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -44,6 +45,9 @@ async function productPage({ params }: { params: Promise<{ slug: string }> }) {
                 <PortableText value={product.description} />
               )}
             </div>
+          </div>
+          <div className="mt-6">
+            <AddToBasketButton product={product} disabled={isOutOfStock} />
           </div>
         </div>
       </div>
