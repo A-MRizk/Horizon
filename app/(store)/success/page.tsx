@@ -1,10 +1,12 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import useBasketStore from "@/store/store";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
-function successPage() {
+function SuccessPage() {
   const searchParams = useSearchParams();
   const orderNumber = searchParams.get("order Number");
   const clearBasket = useBasketStore((state) => state.clearBasket);
@@ -16,7 +18,7 @@ function successPage() {
     }
   }, [orderNumber, clearBasket]);
   return (
-    <div className="flex flex-col items-center min-h-screen bg-gray-50">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-white p-12 rounded-xl shadow-lg max-w-2xl w-full mx-4">
         <div className="flex justify-center mb-8">
           <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -43,7 +45,7 @@ function successPage() {
           <p className="text-lg text-gray-700 mb-4">
             Your order has been confirmed and will be shipped shortly
           </p>
-          <div className="space-y-2">
+          <div className="space-y-2 flex flex-col">
             {orderNumber && (
               <p className="text-gray-600 flex items-center space-x-5">
                 <span>Order Number:</span>
@@ -60,9 +62,22 @@ function successPage() {
             )}
           </div>
         </div>
+        <div className="space-y-4 flex flex-col items-center">
+          <p className="text-gray-600">
+            A confirmation email has been sent to your registered email address.
+          </p>
+          <div className=" flex flex-col sm:flex-row gap-4 justify-center">
+            <Button asChild className="bg-green-600 hover:bg-green-700">
+              <Link href="/orders">View Order Details</Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/">Continue Shopping</Link>
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export default successPage;
+export default SuccessPage;
