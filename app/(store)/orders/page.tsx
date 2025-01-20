@@ -20,7 +20,7 @@ async function Orders() {
         <h1 className="text-4xl font-bold text-gray-900 tracking-tight mb-8">
           My Orders
         </h1>
-        {orders.length > 0 ? (
+        {orders.length === 0 ? (
           <div className="text-center text-gray-600">
             <p>You have not placed any order yet.</p>
           </div>

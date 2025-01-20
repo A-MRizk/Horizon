@@ -6,7 +6,7 @@ export async function getMyOrders(userId: string) {
     throw new Error("No user ID required");
   }
 
-  const My_ORDERS_QUERY =
+  const MY_ORDERS_QUERY =
     defineQuery(`*[_type == "order" && clerkUserId == $userId] | order(orderDate desc) {
         ...,
         products[] {
@@ -14,11 +14,13 @@ export async function getMyOrders(userId: string) {
             product->
         }
     }`);
+
   try {
     const orders = await sanityFetch({
-      query: My_ORDERS_QUERY,
+      query: MY_ORDERS_QUERY,
       params: { userId },
     });
+    console.log("Orders fetched:", orders);
     return orders.data || [];
   } catch (error) {
     console.error("Error fetching orders", error);

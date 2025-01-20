@@ -95,7 +95,7 @@ export type Order = {
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentInetntId?: string;
+  stripePaymentIntentId?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -108,7 +108,7 @@ export type Order = {
   }>;
   totalPrice?: number;
   currency?: string;
-  amountDiscount?: string;
+  amountDiscount?: number;
   status?: "pending" | "paid" | "shipped" | "delivered" | "cancelled";
   orderDate?: string;
 };
@@ -281,9 +281,9 @@ export type SanityImageMetadata = {
 export type AllSanitySchemaTypes = SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityFileAsset | Geopoint | Sale | Order | Products | Category | Slug | BlockContent | SanityImageCrop | SanityImageHotspot | SanityImageAsset | SanityAssetSourceData | SanityImageMetadata;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/orders/getMyOrders.tsx
-// Variable: My_ORDERS_QUERY
+// Variable: MY_ORDERS_QUERY
 // Query: *[_type == "order" && clerkUserId == $userId] | order(orderDate desc) {        ...,        products[] {            ...,            product->        }    }
-export type My_ORDERS_QUERYResult = Array<{
+export type MY_ORDERS_QUERYResult = Array<{
   _id: string;
   _type: "order";
   _createdAt: string;
@@ -295,7 +295,7 @@ export type My_ORDERS_QUERYResult = Array<{
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentInetntId?: string;
+  stripePaymentIntentId?: string;
   products: Array<{
     product: {
       _id: string;
@@ -361,10 +361,28 @@ export type My_ORDERS_QUERYResult = Array<{
   }> | null;
   totalPrice?: number;
   currency?: string;
-  amountDiscount?: string;
+  amountDiscount?: number;
   status?: "cancelled" | "delivered" | "paid" | "pending" | "shipped";
   orderDate?: string;
 }>;
+
+// Source: ./sanity/lib/Sales/getActiveSaleByCoupon.ts
+// Variable: ACTIVE_SALE_BY_COUPON_QUERY
+// Query: *[_type == "sale" && isActive == true && couponCode == $couponCode] | order(validForm desc)[0]
+export type ACTIVE_SALE_BY_COUPON_QUERYResult = {
+  _id: string;
+  _type: "sale";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title?: string;
+  description?: string;
+  discountAmount?: number;
+  couponCode?: string;
+  validForm?: string;
+  validUntil?: string;
+  isActive?: boolean;
+} | null;
 
 // Source: ./sanity/lib/products/getAllCategories.ts
 // Variable: ALL_CATEGORIES_QUERY
@@ -632,34 +650,16 @@ export type PRODUCT_SEARCH_QUERYResult = Array<{
   stock?: number;
 }>;
 
-// Source: ./sanity/lib/Sales/getActiveSaleByCoupon.ts
-// Variable: ACTIVE_SALE_BY_COUPON_QUERY
-// Query: *[_type == "sale" && isActive == true && couponCode == $couponCode] | order(validForm desc)[0]
-export type ACTIVE_SALE_BY_COUPON_QUERYResult = {
-  _id: string;
-  _type: "sale";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title?: string;
-  description?: string;
-  discountAmount?: number;
-  couponCode?: string;
-  validForm?: string;
-  validUntil?: string;
-  isActive?: boolean;
-} | null;
-
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    "*[_type == \"order\" && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[] {\n            ...,\n            product->\n        }\n    }": My_ORDERS_QUERYResult;
+    "*[_type == \"order\" && clerkUserId == $userId] | order(orderDate desc) {\n        ...,\n        products[] {\n            ...,\n            product->\n        }\n    }": MY_ORDERS_QUERYResult;
+    "*[_type == \"sale\" && isActive == true && couponCode == $couponCode] | order(validForm desc)[0]": ACTIVE_SALE_BY_COUPON_QUERYResult;
     "*[_type == \"category\"] | order(name asc)": ALL_CATEGORIES_QUERYResult;
     "*[_type == \"products\"] | order(name asc)": ALL_PRODUCTS_QUERYResult;
     "*[_type == \"products\" && slug.current == $slug] | order(name asc)[0]": PRODUCT_BY_ID_QUERYResult;
     "*[_type == \"products\" && references(*[_type == \"category\" && slug.current == $categorySlug]._id)] | order(name asc)": PRODUCTS_BY_CATEGORY_QUERYResult;
     "*[_type == \"products\" && name match $searchParams] | order(name asc)": PRODUCT_SEARCH_QUERYResult;
-    "*[_type == \"sale\" && isActive == true && couponCode == $couponCode] | order(validForm desc)[0]": ACTIVE_SALE_BY_COUPON_QUERYResult;
   }
 }
