@@ -8,7 +8,7 @@ import { useEffect } from "react";
 
 function SuccessPage() {
   const searchParams = useSearchParams();
-  const orderNumber = searchParams.get("order Number");
+  const orderNumber = searchParams.get("orderNumber");
   const clearBasket = useBasketStore((state) => state.clearBasket);
   const sessionId = searchParams.get("session_id");
 
@@ -17,6 +17,7 @@ function SuccessPage() {
       clearBasket();
     }
   }, [orderNumber, clearBasket]);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50">
       <div className="bg-white p-12 rounded-xl shadow-lg max-w-2xl w-full mx-4">
@@ -41,24 +42,27 @@ function SuccessPage() {
         <h1 className="text-4xl font-bold mb-6 text-center">
           Thank You for Your Order
         </h1>
-        <div className="border-t border-b border-gray-200 py-6 mb-6 flex justify-center items-center">
+
+        <div className="border-t border-b border-gray-200 py-6 mb-6 flex flex-col items-center">
           <p className="text-lg text-gray-700 mb-4">
             Your order has been confirmed and will be shipped shortly
           </p>
-          <div className="space-y-2 flex flex-col">
+          <div className="space-y-4">
             {orderNumber && (
-              <p className="text-gray-600 flex items-center space-x-5">
+              <div className="text-gray-600 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
                 <span>Order Number:</span>
-                <span className="font-mono text-sm text-green-600">
+                <span className="font-mono text-sm text-green-600 break-all">
                   {orderNumber}
                 </span>
-              </p>
+              </div>
             )}
             {sessionId && (
-              <p className="text-gray-600 flex justify-between">
+              <div className="text-gray-600 flex flex-col sm:flex-row sm:items-center sm:space-x-3">
                 <span>Transaction ID:</span>
-                <span className="font-mono text-sm"></span>
-              </p>
+                <span className="font-mono text-xs text-green-600 break-all">
+                  {sessionId}
+                </span>
+              </div>
             )}
           </div>
         </div>
